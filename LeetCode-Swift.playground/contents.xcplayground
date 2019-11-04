@@ -3,5 +3,6 @@
     <pages>
         <page name='DP(动态规划-爬楼梯)'/>
         <page name='DP(动态规划-数组最大连续子序列之和)'/>
+        <page name='Sort Algorithm(排序算法)'/>
     </pages>
 </playground>

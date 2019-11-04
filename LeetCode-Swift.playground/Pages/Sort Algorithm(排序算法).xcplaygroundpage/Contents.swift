@@ -29,6 +29,7 @@ import Foundation
  [ 3, 4, 5, 8 | 6 ]
  [ 3, 4, 5, 6, 8 |]
 */
+//MARK: 插入排序
 func insertSort(_ array:[Int]) -> [Int] {
     var a = array
     for i in 1..<a.count {
@@ -46,6 +47,8 @@ func insertSort(_ array:[Int]) -> [Int] {
 let list = [ 10, -1, 3, 9, 2, 27, 8, 5, 1, 3, 0, 26 ]
 insertSort(list)
 
+
+//MARK: 快速排序
 
 //: 快速排序是最快速的原地排序方案
 //Lomuto 分区方案，循环过程把数组分成4个区域
@@ -235,6 +238,170 @@ var list4 = [ 10, 0, 3, 9, 2, 14, 8, 27, 1, 5, 8, -1, 26 ]
 //指定支点的index
 partitionDutchFlag(&list4, low: 0, high: list4.count - 1, pivotIndex: 10)
 list4
+
+//MARK: 选择排序
+//每次循环选择最小的放在前面
+func selectionSort(arr: inout [Int]) {
+    
+    let count = arr.count
+    for i in 0..<count-1 {
+        var minIndex = i
+        for j in (i+1)..<count {
+            if arr[minIndex] > arr[j] {
+                minIndex = j
+            }
+        }
+        if i != minIndex {
+            //交换两个数位置,利用元组交换位置 或者 用一个中间变量 或者用swapAt方法
+//            (arr[minIndex], arr[i]) = (arr[i], arr[minIndex])
+            // a.swapAt(x, lowest)
+
+            let temp = arr[i]
+            arr[i] = arr[minIndex]
+            arr[minIndex] = temp
+        }
+    }
+}
+
+var testSelectionArr = [3,4,1,6,3,10,9,7]
+selectionSort(arr: &testSelectionArr)
+
+//MARK:冒泡排序
+//每个元素相邻比较
+func bubbleSort(arr: inout [Int]) {
+    let count = arr.count
+    for i in 0..<count {
+        for j in 1..<count-i {
+            if arr[j] < arr[j - 1] {
+                let temp = arr[j-1]
+                arr[j-1] = arr[j]
+                arr[j] = temp
+            }
+        }
+    }
+}
+var testBubbleArr = [3,4,1,6,3,10,9,7]
+bubbleSort(arr: &testBubbleArr)
+
+//MARK:归并排序
+
+//递归有点容易理解，缺点会导致堆栈溢出，堆栈溢出的产生是由于过多的函数调用，导致调用堆栈无法容纳这些调用的返回地址
+//bottomToTop 自下而上，非递归，用双缓冲解决
+
+/*
+ a                                  6   5   7   2   8   4   9   1
+ 大小为1的相邻数组的合并对              5 6    |   2 7 |  4 8  | 1  9
+ 大小为2的相邻数组的合并对              2 5 6 7        |  1 4 8 9
+ 大小为4的相邻数组的合并对              1  2  4 6 7 8 9
+ */
+
+func mergeSort1(arr: [Int]) -> [Int] {
+    let n = arr.count
+    var width = 1
+    //双缓冲二维数组，index=0 读取， index=1 写入
+    var z = [arr, arr]
+    // [1-d]写入 d读取
+    var d = 0
+    
+    while width < n {
+        var i = 0
+        while i < n {
+            //定义三个标记，l为左堆索引，r为右堆索引，j记录当前检查的标记
+            var j = i
+            var l = i
+            var r = i + width
+            let lmax = min(l + width, n)
+            let rmax = min(r + width, n)
+            
+            while l < lmax && r < rmax {
+                if z[d][l] < z[d][r] {
+                    z[1-d][j] = z[d][l]
+                    l += 1
+                } else {
+                    z[1-d][j] = z[d][r]
+                    r += 1
+                }
+                j += 1
+            }
+            while l < lmax {
+                z[1-d][j] = z[d][l]
+                j += 1
+                l += 1
+            }
+            while r < rmax {
+                z[1-d][j] = z[d][r]
+                j += 1
+                r += 1
+            }
+            i += width*2
+        }
+        
+        //二分缩小数组
+        width *= 2
+        d = 1 - d
+    }
+    
+    return z[d]
+}
+
+
+
+//topToBottom 自上而下，递归，容易理解
+
+func mergeSort2(arr: [Int]) -> [Int] {
+    //递归出口
+    guard arr.count > 1 else {return arr}
+    
+    let m = arr.count / 2
+    
+    let l = mergeSort2(arr: Array(arr[0..<m]))
+    let r = mergeSort2(arr: Array(arr[m..<arr.count]))
+    
+    return merge(lPie: l, rPie: r)
+    
+}
+
+func merge(lPie: [Int], rPie: [Int]) -> [Int] {
+    
+    var l = 0
+    var r = 0
+    
+    var a = [Int]()
+    a.reserveCapacity(lPie.count + rPie.count)
+    
+    while l < lPie.count && r < rPie.count {
+        if lPie[l] < rPie[r] {
+            a.append(lPie[l])
+            l += 1
+        } else if lPie[l] > rPie[r] {
+            a.append(rPie[r])
+            r += 1
+        } else {
+            a.append(lPie[l])
+            l += 1
+            a.append(rPie[r])
+            r += 1
+        }
+    }
+        
+    while l < lPie.count {
+        a.append(lPie[l])
+        l += 1
+    }
+    
+    while r < rPie.count {
+        a.append(rPie[r])
+        r += 1
+    }
+    
+    return a
+}
+
+let mergeTestArr = [3,4,1,6,3,10,9,7]
+
+let mergeArr2 = mergeSort2(arr: mergeTestArr)
+
+let mergeArr1 = mergeSort1(arr: mergeTestArr)
 
 
 //: [Next](@next)

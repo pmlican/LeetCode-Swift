@@ -255,7 +255,6 @@ func selectionSort(arr: inout [Int]) {
             //交换两个数位置,利用元组交换位置 或者 用一个中间变量 或者用swapAt方法
 //            (arr[minIndex], arr[i]) = (arr[i], arr[minIndex])
             // a.swapAt(x, lowest)
-
             let temp = arr[i]
             arr[i] = arr[minIndex]
             arr[minIndex] = temp

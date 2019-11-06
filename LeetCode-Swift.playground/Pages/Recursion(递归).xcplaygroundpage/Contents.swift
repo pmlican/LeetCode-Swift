@@ -23,8 +23,11 @@ extension ListNode: CustomStringConvertible {
         s += "\(val)->"
         var node = self
         while let n = node.next {
-            s += "\(n.val)->"
+            s += "\(n.val)"
             node = n
+            if node.next != nil {
+                s += "->"
+            }
         }
         return s
     }

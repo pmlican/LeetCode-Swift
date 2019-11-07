@@ -6,5 +6,6 @@
         <page name='Sort Algorithm(排序算法)'/>
         <page name='Strings'/>
         <page name='Recursion(递归)'/>
+        <page name='LinkedList(链表)'/>
     </pages>
 </playground>

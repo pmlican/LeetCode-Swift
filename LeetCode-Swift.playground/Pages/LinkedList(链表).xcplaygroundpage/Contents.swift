@@ -15,7 +15,6 @@ import Foundation
  */
 
 
-let n = ListNode(1)
 
 
 //: [Next](@next)

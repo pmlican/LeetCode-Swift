@@ -7,5 +7,6 @@
         <page name='Strings'/>
         <page name='Recursion(递归)'/>
         <page name='LinkedList(链表)'/>
+        <page name='Tree(树)'/>
     </pages>
 </playground>

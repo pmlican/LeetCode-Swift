@@ -25,6 +25,7 @@ class TreeNode {
     }
 }
 
+//MARK:题目一：二叉树，前序，中序，后序遍历
 func preorderTraversal(_ root: TreeNode?) -> [Int] {
     var arr = [Int]()
     helper(node: root, arr: &arr)
@@ -95,11 +96,11 @@ let node2 = TreeNode(3)
 root.right = node1
 node1.left = node2
 
-let res = postOrderTraversal(root)
-print(res)
+let resInorder = inorderTraversal(root)
+let resPreOrder = preorderTraversal(root)
+let resPostOrder = postOrderTraversal(root)
 
-
-
+//MARK: 题目二：二叉树层序遍历
 //层序遍历：广度优先搜索是一种广泛运用在树或图这类数据结构中，遍历或搜索的算法。 该算法从一个根节点开始，首先访问节点本身。 然后遍历它的相邻节点，其次遍历它的二级邻节点、三级邻节点，以此类推。
 /*
  题目二叉树层次遍历
@@ -178,6 +179,7 @@ func levelOrder(_ root: TreeNode?) -> [[Int]] {
   return res
 }
 
+//MARK:题目三：求二叉树最大深度
 /*
    3
   / \
@@ -236,5 +238,212 @@ tNode5.left = tNode6
 maxDepth1(tNode,depth: 1)
 maxDepth(tNode)
 print(answer)
+
+//MARK:题目四： 判断二叉树是否对称
+/*
+     1
+    / \
+   2   2
+  / \ / \
+ 3  4 4  3   对称
+  1
+  / \
+ 2   2
+  \   \
+  3    3      不对称
+ */
+//递归解法： 1.递归的子问题是什么 2.递归结束条件是什么
+
+//判断二叉树是否对称
+func isSymmetric(_ root: TreeNode?) -> Bool {
+    return root == nil || symmetricHelper(root?.left,root?.right)
+}
+
+func symmetricHelper(_ left: TreeNode?,_ right: TreeNode?) -> Bool {
+    //递归出口
+    if left == nil && right == nil {
+        return true
+    }
+    if left == nil || right == nil {
+        return false
+    }
+    //子问题: 检查左子树的左叶子是否与右子树右叶子相等，并且左子树右叶子是否与右子树左叶子相等
+    return (left?.val == right?.val) && symmetricHelper(left?.left, right?.right) && symmetricHelper(left?.right, right?.left)
+}
+
+//迭代方法 用层序遍历法，利用一个辅助队列
+func isSymmertric(_ root: TreeNode?) -> Bool{
+    var queue = [TreeNode?]()
+    queue.append(root?.left)
+    queue.append(root?.right)
+    while !queue.isEmpty {
+        let left = queue.removeFirst()
+        let right = queue.removeFirst()
+        if left == nil && right == nil {continue}
+        if left == nil || right == nil {return false}
+        if left?.val != right?.val  {return false}
+        queue.append(left?.left)
+        queue.append(right?.right)
+        queue.append(left?.right)
+        queue.append(right?.left)
+    }
+    return true
+}
+
+//MARK:题目五：路径总和
+/*
+       5
+      / \
+     4   8
+    /   / \
+   11  13  4
+  /  \      \
+ 7    2      1
+ 存在目标和为 22 的根节点到叶子节点的路径 5->4->11->2
+ */
+//递归方法
+func hasPathSum(_ root: TreeNode?,_ sum: Int) -> Bool {
+        guard let root = root else {
+            return false
+        }
+        if root.val == sum, root.left == nil, root.right == nil {
+            return true
+        }
+        let target = sum - root.val
+        //递归求解左右节点的剩余值
+        return hasPathSum(root.left, target) || hasPathSum(root.right, target)
+}
+
+//迭代方法,用栈将递归转成迭代的形式
+//我们可以用栈将递归转成迭代的形式。深度优先搜索在除了最坏情况下都比广度优先搜索更快。最坏情况是指满足目标和的 root->leaf 路径是最后被考虑的，这种情况下深度优先搜索和广度优先搜索代价是相通的。
+func hasPathSum1(_ root: TreeNode?, sum: Int) -> Bool {
+    guard let root = root else {
+        return false
+    }
+    //初始化把根节点作为第一个元素初始化栈
+    var stack = [(root, sum - root.val)]
+    while !stack.isEmpty {
+        let (node, currentSum) = stack.removeLast()
+        if node.left == nil && node.right == nil && currentSum == 0 {
+            return true
+        }
+        if let right = node.right {
+            stack.append((right, currentSum - right.val))
+        }
+        if let left = node.left {
+            stack.append((left, currentSum - left.val))
+        }
+    }
+    return false
+}
+
+//MARK: 补充:广度优先（BFS:Breadth First Search),深度优先（DFS:Depth First Search）
+
+/*
+ 深度优先遍历：从根节点出发，沿着左子树方向进行纵向遍历，直到找到叶子节点为止。然后回溯到前一个节点，进行右子树节点的遍历，直到遍历完所有可达节点为止。
+
+ 广度优先遍历：从根节点出发，在横向遍历二叉树层段节点的基础上纵向遍历二叉树的层次。
+ 这两种可以用来遍历树和图
+ 用树来作例子：
+         A
+       /    \
+      B      C
+     /  \   /  \
+    D   E  F    G
+ DFS => ABDECFG
+ BFS => ABCDEFG
+ 
+ DFS: 用栈来实现，父节点入栈，循环里进行，栈pop, 先右子节点入栈，后左子节点入栈
+ BFS: 用队列来实现，父节点入队,循环里进行，出队, 先 左子节点入队，后右子节点入队
+ 
+*/
+
+func BFS(_ root: TreeNode) -> [Int] {
+    var queue = [root]
+    var res = [Int]()
+    while !queue.isEmpty {
+        let node = queue.removeFirst()
+        if let left = node.left {
+            queue.append(left)
+        }
+        if let right = node.right {
+            queue.append(right)
+        }
+        res.append(node.val)
+    }
+    return res
+}
+
+func DFS(_ root: TreeNode) -> [Int] {
+    var stack = [root]
+    var res = [Int]()
+    while !stack.isEmpty {
+        let node = stack.removeLast()
+        if let right = node.right {
+            stack.append(right)
+        }
+        if let left = node.left {
+            stack.append(left)
+        }
+        res.append(node.val)
+    }
+    return res
+}
+
+/*
+    1
+   /  \
+  2    3
+ /  \  / \
+4   5  6  7
+ 
+BFS  [1, 2, 3, 4, 5, 6, 7]
+DFS  [1, 2, 4, 5, 3, 6, 7]
+
+ */
+
+let BFS1 = TreeNode(1)
+let BFS2 = TreeNode(2)
+let BFS3 = TreeNode(3)
+let BFS4 = TreeNode(4)
+let BFS5 = TreeNode(5)
+let BFS6 = TreeNode(6)
+let BFS7 = TreeNode(7)
+BFS1.left = BFS2
+BFS1.right = BFS3
+BFS2.left = BFS4
+BFS2.right = BFS5
+BFS3.left = BFS6
+BFS3.right = BFS7
+
+print(BFS(BFS1))
+print(DFS(BFS1))
+
+//MARK: 构建二叉树
+
+/*
+ 构建二叉树一定要有中序数组，因为中序确定左右子树
+ 前序和后序，可以确定根节点
+ 然后递归解决子问题
+      - *  =  = =
+ 中序  9 3 15 20 7
+ 
+      - =  = =  *
+ 后序  9 15 7 20 3
+ 
+ *代表根节点
+ -代表左子树节点
+ =代表右子树节点
+ 
+ 然后继续递归分下去得到树结构如图
+    3
+  /   \
+ 9    20
+     /  \
+    15   7
+ */
+
+//第一题：根据后序和中序构建二叉树，中序[9,3,15,20,7],后序[9,15,7,20,3]
+
 
 //: [Next](@next)

@@ -36,9 +36,11 @@ func insertSort(_ array:[Int]) -> [Int] {
         var j = i
         let temp = a[j]
         while j > 0 && temp < a[j - 1] {
+            //前面分区元素类似往后挪，空出一个位置
             a[j] = a[j - 1]
             j -= 1
         }
+        //插入当前空出位置
         a[j] = temp
     }
     return a

@@ -374,6 +374,7 @@ func BFS(_ root: TreeNode) -> [Int] {
     return res
 }
 
+//这种写法是前序遍历
 func DFS(_ root: TreeNode) -> [Int] {
     var stack = [root]
     var res = [Int]()
@@ -418,6 +419,9 @@ BFS3.right = BFS7
 
 print(BFS(BFS1))
 print(DFS(BFS1))
+print("前序遍历",preorderTraversal(BFS1))
+print("中序遍历",inorderTraversal(BFS1))
+print("后序遍历",postOrderTraversal(BFS1))
 
 //MARK: 构建二叉树
 
@@ -430,6 +434,8 @@ print(DFS(BFS1))
  
       - =  = =  *
  后序  9 15 7 20 3
+      * - =  =  =
+ 先序  3 9 20 15 7
  
  *代表根节点
  -代表左子树节点

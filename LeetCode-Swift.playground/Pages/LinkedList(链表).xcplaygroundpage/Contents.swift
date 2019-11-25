@@ -17,7 +17,7 @@ extension ListNode: CustomStringConvertible {
         var node:ListNode? = self
         var str = ""
         while node != nil {
-            str += "\(node!.val)->"
+            str += "\(node!.val)->\(((node?.next) != nil) ? "" : "nil")"
             node = node?.next
         }
         return str
@@ -34,6 +34,8 @@ extension ListNode: CustomStringConvertible {
  遍历整个原始链表，将小于该值的放于dummyHead1中，其余的放置在dummyHead2中
  遍历结束后，将dummyHead2插入到dummyHead1后面
  */
+
+
 
 
 //MARK: 反转链表

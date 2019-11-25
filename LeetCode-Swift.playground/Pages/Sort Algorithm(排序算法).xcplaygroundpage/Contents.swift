@@ -52,7 +52,7 @@ insertSort(list)
 
 //MARK: 快速排序
 
-//: 快速排序是最快速的原地排序方案
+//: 快速排序是最快速的原地排序方案，是不稳定算法，时间复杂度是O(nlogn)
 //Lomuto 分区方案，循环过程把数组分成4个区域
 //a[low...i] 包含小于支点的元素
 //a[i+1...j-1] 包含大于支点的元素
@@ -284,10 +284,27 @@ func bubbleSort(arr: inout [Int]) {
 var testBubbleArr = [3,4,1,6,3,10,9,7]
 bubbleSort(arr: &testBubbleArr)
 
+//百度百科解法
+func bubbleSort1(arr:inout [Int]) {
+    let n = arr.count
+    //外循环为排序趟数，len个数进行len-1趟
+    for i in 0..<n-1 {
+        //内循环为每趟比较的次数，第i趟比较len-i次
+        for j in 0..<n-1-i {
+            if arr[j] > arr[j+1] {
+                let temp = arr[j]
+                arr[j] = arr[j+1]
+                arr[j+1] = temp
+            }
+        }
+    }
+}
+
 //MARK:归并排序
 
 //递归有点容易理解，缺点会导致堆栈溢出，堆栈溢出的产生是由于过多的函数调用，导致调用堆栈无法容纳这些调用的返回地址
 //bottomToTop 自下而上，非递归，用双缓冲解决
+//时间复杂度为 O(nlogn)，优点是稳定排序，即是排序后不改变原来的元素的位置，缺点是需要一个和需要排序数组长度一致的临时数组
 
 /*
  a                                  6   5   7   2   8   4   9   1

@@ -374,7 +374,7 @@ func BFS(_ root: TreeNode) -> [Int] {
     return res
 }
 
-//这种写法是前序遍历
+//这种写法DFS深度优先-前序遍历
 func DFS(_ root: TreeNode) -> [Int] {
     var stack = [root]
     var res = [Int]()
@@ -390,6 +390,39 @@ func DFS(_ root: TreeNode) -> [Int] {
     }
     return res
 }
+//这种写法DFS深度优先-中序遍历
+func DFS1(_ root: TreeNode?) -> [Int] {
+    var stack = [TreeNode]()
+    var node = root
+    var res = [Int]()
+    while node != nil || !stack.isEmpty {
+        while let n = node {
+            stack.append(n)
+            node = node?.left
+        }
+        node = stack.removeLast()
+        res.append(node!.val)
+        node = node?.right
+    }
+    return res
+}
+
+//这种写法DFS深度优先-后序序遍历
+func DFS2(_ root: TreeNode) -> [Int] {
+    var stack = [root]
+    var res = [Int]()
+    while !stack.isEmpty {
+        let node = stack.removeLast()
+        res.insert(node.val, at: 0)
+        if let left = node.left {
+            stack.append(left)
+        }
+        if let right = node.right {
+            stack.append(right)
+        }
+    }
+    return res
+}
 
 /*
     1
@@ -400,6 +433,15 @@ func DFS(_ root: TreeNode) -> [Int] {
  
 BFS  [1, 2, 3, 4, 5, 6, 7]
 DFS  [1, 2, 4, 5, 3, 6, 7]
+ 
+                    DFS(分为后序，前序，中序)
+ Postorder                Preorder                inorder
+ left->right->root    root->left->right       left->root->right
+      5                    1                     4
+    /   \                /   \                 /    \
+   3     4              2     5               2      5
+  /  \                /   \                  /  \
+ 1    2              3    4                 1    3
 
  */
 

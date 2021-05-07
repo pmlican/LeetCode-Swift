@@ -37,6 +37,7 @@ extension ListNode: CustomStringConvertible {
 
 
 // 讲解：https://leetcode-cn.com/problems/reverse-linked-list/solution/shi-pin-jiang-jie-di-gui-by-geek-8m/
+// 链表基础知识讲解： https://www.geeksforgeeks.org/data-structures/linked-list/#singlyLinkedList
 
 //MARK: 反转链表
 /*
